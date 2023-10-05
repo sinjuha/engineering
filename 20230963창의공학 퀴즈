@@ -1,0 +1,124 @@
+1.
+(1)창의적 사고 및 문제 해결 능력을 배워야 합니다.
+(2)팀원들과 함께 생각하며 문제를 해결함으로서 협업능력을 배워야 합니다.
+(3)아이디어를 효과적으로 전달하기 위하여 소통능력을 배워야 합니다.
+(4)다양한 분야의 지식을 합치면서 여러 방향으로 해결방안을 찾아가는 법을 배워야 합니다.
+(5)기술이 사회에 미치는 영향과 그에 따른 책임에 대해 고민하고 이를 실천하는 방법을 배워야 합니다.
+
+2.
+(1)우선 우리집의 전등의 종류가 무엇인지, 스마트폰 앱은 무엇을 사용할지 생각한다.
+(2)다음으로 스마트폰과 전등을 무엇으로 연결시킬껀지 생각한다(예:wifi, 블루투스 등)
+(3)스마트폰과 전등을 연결시켜줄 수 있는 무선장치와 그 무선장치의 신호로 전기가 켜지거나 꺼지는 릴레이 회로를 전등에 연결한다.
+(4)그리고 무선장치를 조종할 수 있는 스마트폰 앱을 개발한다.
+(5)이후에 제대로 작동되는지 확인하고 오류가 발생하면 위 과정을 반복하여 문제를 해결한다.
+
+3.
+아두이노 코드:
+const int switchPin = 13;
+const int serverPort = 12345;
+void setup() {
+  pinMode(switchPin, INPUT);
+  Serial.begin(9600);
+}
+void loop() {
+  int switchState = digitalRead(switchPin);
+  Serial.println(switchState);
+  delay(1000);
+}
+프로세싱 코드:
+import processing.net.*;
+int serverPort = 12345;
+Server myServer;
+int backgroundColor = 0;
+void setup() {
+  size(400, 400);
+  myServer = new Server(this, "COM3", serverPort);
+}
+void draw() {
+  background(backgroundColor);
+  Client client = myServer.available();
+  if (client != null) {
+    String message = client.readString();
+    if (message != null) {
+      int switchState = Integer.parseInt(message.trim());
+      if (switchState == 1) {
+        backgroundColor = color(0, 255, 0);
+        } 
+      else if (switchState == 2) {
+        backgroundColor = 0;
+      }
+    }
+    client.stop();
+  }
+}
+
+4.
+import processing.net.*;
+Server server;
+int backgroundColor = color(255, 0, 0);
+void setup() {
+  size(400, 400);
+  server = new Server(this, 12345);
+}
+void draw() {
+  background(backgroundColor);
+}
+void serverEvent(Server s, Client c) {
+  String message = c.readString();
+  if (message != null) {
+    message = message.trim();
+    if (message.equals("1")) {
+      backgroundColor = color(0, 0, 255);
+    } else if (message.equals("0")) {
+      backgroundColor = color(255, 0, 0);
+    }
+  }
+}
+
+5.
+아두이노 코드:
+int ledPin = 7;
+int speakerPin = 4;
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
+  mySerial.begin(9600);
+}
+void loop() {
+  if (mySerial.available() > 0) {
+    char command = mySerial.read();
+    if (command == '1') {
+      digitalWrite(ledPin, HIGH);
+    } else if (command == '0') {
+      digitalWrite(ledPin, LOW);
+    } else if (command >= '1' && command <= '8') {
+      int note = (command - '1') * 100 + 262;
+      tone(speakerPin, note);
+      delay(500);
+      noTone(speakerPin);
+    }
+  }
+}
+프로세싱 코드:
+import processing.net.*;
+Client client;
+int serverPort = 12345;
+String serverIP = "192.168.1.100";
+void setup() {
+  size(200, 200);
+  client = new Client(this, serverIP, serverPort);
+}
+void draw() {
+  if (mousePressed) {
+    if (mouseX < width / 2) {
+      client.write("1");
+    } else {
+      client.write("0");
+    }
+  }
+}
+void keyPressed() {
+  if (key >= '1' && key <= '8') {
+    client.write(key);
+  }
+}
