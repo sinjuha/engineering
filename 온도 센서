@@ -1,0 +1,47 @@
+1.
+2, 3.
+아두이노 코드
+void setup() {
+  Serial.begin(9600);
+}
+double th(int v) {
+  double t;
+  t = log(((10240000/v) - 10000));
+  t = 1 /(0.001129148 + (0.000234125*t) + (0.0000000876741*t*t*t));
+  t = t - 273.15;
+  return t;
+}
+void loop() {
+  int a = analogRead(A0);
+  Serial.println(th(a));
+  delay(500);
+}
+
+프로세싱 코
+import processing.serial.*;
+Serial p;
+void setup(){
+  size(400,400);
+  p = new Serial(this,"COM4",9600);
+}
+void draw(){
+  if(p.available()>0){
+    String m = p.readStringUntil('\n');
+    if(m != null){
+     print(m);
+     if( float(m) >26.0) background(255,0,0);
+     else background(0,255,0);
+     textSize(128);
+     text(m, 20, 250);
+    }
+  }
+}
+
+4.
+Serial.begin(9600);: 시리얼 통신을 9600 bps 속도로 초기화합니다.
+double th(int v): 이 함수는 아날로그 핀 A0에서 읽은 값 v를 사용하여 온도를 계산합니다. 아날로그 값을 로그 함수를 사용하여 온도로 변환하고, 센서의 특정 공식을 사용하여 온도를 측정하고 반환합니다.
+void loop(): 이 함수는 아날로그 핀 A0에서 값을 읽고 th 함수를 사용하여 온도를 계산한 다음, 시리얼 통신을 통해 컴퓨터로 값을 전송합니다. 그 후 0.5초 동안 대기합니다.
+Serial p;: 시리얼 통신을 위한 Serial 객체 p를 선언합니다.
+void setup(): Processing 창을 초기화하고, 아두이노와의 시리얼 통신을 설정합니다. COM4 포트와 9600 bps 속도로 아두이노와 통신합니다.
+void draw(): 이 함수는 계속해서 실행됩니다. p.available()을 사용하여 시리얼 버퍼에 데이터가 있는지 확인하고, 있다면 데이터를 읽어옵니다.
+읽어온 데이터를 온도 값으로 해석하고, 이 값을 기반으로 배경색을 빨간색 또는 녹색으로 설정합니다. 그리고 해당 온도 값을 화면에 큰 글자로 표시합니다.
