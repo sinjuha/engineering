@@ -5,35 +5,23 @@
 아두이노 코드: 
 
 int ledPin = 13;
-
 int photoPin = A1;
-
 int tempPin = A0;
 
 void setup() {
-
   Serial.begin(9600);
-  
   pinMode(ledPin, OUTPUT);
-  
 }
 
 double th(int v) {
-
   double t;
-  
   t = log(((10240000.0/v) - 10000.0));
-  
   t = 1 /(0.001129148 + (0.000234125*t) + (0.0000000876741*t*t*t));
-  
   t = t - 273.15;
-  
   return t;
-  
 }
 
 void loop() {
-
   if (Serial.available() > 0) {
     char command = Serial.read();
     if (command == '1') {
