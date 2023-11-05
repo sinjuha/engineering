@@ -23,7 +23,6 @@ double th(int v) {
 void loop() {
   if (Serial.available() > 0) {
     char command = Serial.read();
-    
     if (command == '1') {
       digitalWrite(ledPin, HIGH);
     } else if (command == '0') {
