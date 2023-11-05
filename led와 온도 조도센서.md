@@ -5,9 +5,7 @@
 아두이노 코드: 
 
 int ledPin = 13;
-
 int photoPin = A1;
-
 int tempPin = A0;
 
 void setup() {
@@ -45,6 +43,7 @@ void loop() {
 }
 
 프로세싱 코드:
+
 import processing.net.*;
 import processing.serial.*;
 Server s;
