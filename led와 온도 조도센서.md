@@ -38,7 +38,7 @@ void loop() {
   Serial.print(", T:");
   Serial.println(tempValue);
   
-  delay(1000);  // Delay for a second
+  delay(1000);
 }
 
 프로세싱 코드:
@@ -55,25 +55,25 @@ String msg="hi";
 void draw() {
   c = s.available();
   if (c!=null) {
-    String m = c.readString(); // 서버 데이터 수신
+    String m = c.readString(); 
     if (m.indexOf("GET /")==0) {
       c.write("HTTP/1.1 200 OK\r\n\r\n");
       c.write(msg);
     }
     if (m.indexOf("PUT /")==0) {
-      int n = m.indexOf("\r\n\r\n")+4; // on-off 위치
-      m = m.substring(n); // on-off 잘라 내는 위치   //
-      m += '\n';           // 표시할 문자
-      p.write(m); // 시리얼 포트로 on-off 보내기 
+      int n = m.indexOf("\r\n\r\n")+4;
+      m = m.substring(n); 
+      m += '\n';           
+      p.write(m);
       print(m);
       c.write("HTTP/1.1 200 OK\r\n\r\n");
     }
     c.write(msg);
     c.stop();
   }
-  if (p.available()>0) { // 시리얼 데이터 읽기
+  if (p.available()>0) {
     String m = p.readStringUntil('\n');
     if (m!=null)  msg = m;
     print(msg);
-  }
+   }
 }
