@@ -5,7 +5,9 @@
 아두이노 코드: 
 
 int ledPin = 13;
+
 int photoPin = A1;
+
 int tempPin = A0;
 
 void setup() {
